@@ -1,0 +1,34 @@
+{
+  "name": "pi2_museu-da-musica_api-rest",
+  "version": "1.0.0",
+  "description": "API RESTful para a plataforma digital para manter o acervo vivo do Museu da Música de Itu.",
+  "keywords": [
+    "api",
+    "rest",
+    "museu",
+    "musica",
+    "itu",
+    "acervo",
+    "fatec",
+    "express",
+    "node"
+  ],
+  "homepage": "https://github.com/KodeFatec/pi2_museu-da-musica_api-rest#readme",
+  "bugs": {
+    "url": "https://github.com/KodeFatec/pi2_museu-da-musica_api-rest/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KodeFatec/pi2_museu-da-musica_api-rest.git"
+  },
+  "license": "MIT",
+  "author": "Bryan Castilho Garcia, Eduardo Couss de Oliveira, João Victor Batista Ferreira, Nicolas Trabachini Spinelli, Vinícius de Lucio Porto",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
