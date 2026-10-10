@@ -1,7 +1,7 @@
 const { pool } = require("../config/database");
 const consultaMusica = "select * from musica";
 
-function montarCliente(linha) {
+function montarMusica(linha) {
   return {
     id_musica: linha.id_musica,
     id_genero: linha.id_genero,
@@ -18,7 +18,7 @@ function montarCliente(linha) {
 
 async function listar() {
   const [linhas] = await pool.query(consultaMusica);
-  return linhas.map(montarCliente);
+  return linhas.map(montarMusica);
 }
 
 async function buscarPorId(id) {
@@ -28,7 +28,7 @@ async function buscarPorId(id) {
   if (linhas.length === 0) {
     return null;
   }
-  return montarCliente(linhas[0]);
+  return montarMusica(linhas[0]);
 }
 
 async function criar(dadosMusica) {
@@ -54,16 +54,19 @@ async function atualizar(id, dadosMusica) {
     await conexao.beginTransaction();
     const [resultadoMusica] = await conexao.execute(
       `UPDATE musica
-SET titulo=?, isrc=?, duracao=?, ano_gravacao=?, descricao=?, arquivo_audio=?, spotify_uri=?, youtube_video_id=? WHERE id_musica=?`,
+        SET id_genero=?, titulo=?, isrc=?, duracao=?, ano_gravacao=?,
+            descricao=?, arquivo_audio=?, spotify_uri=?, youtube_video_id=?
+        WHERE id_musica=?`,
       [
+        dadosMusica.id_genero ?? null,
         dadosMusica.titulo,
-        dadosMusica.isrc,
+        dadosMusica.isrc ?? null,
         dadosMusica.duracao,
-        dadosMusica.ano_gravacao,
-        dadosMusica.descricao,
-        dadosMusica.arquivo_audio,
-        dadosMusica.spotify_uri,
-        dadosMusica.youtube_video_id,
+        dadosMusica.ano_gravacao ?? null,
+        dadosMusica.descricao ?? null,
+        dadosMusica.arquivo_audio ?? null,
+        dadosMusica.spotify_uri ?? null,
+        dadosMusica.youtube_video_id ?? null,
         id,
       ],
     );

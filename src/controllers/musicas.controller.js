@@ -13,7 +13,7 @@ async function listar(req, res, next) {
 
 async function buscarPorId(req, res, next) {
   try {
-    const id = Number(req.params.id_musica);
+    const id = Number(req.params.id);
     const musica = await musicasRepository.buscarPorId(id);
     if (!musica) {
       return res.status(404).json({
@@ -40,7 +40,7 @@ async function criar(req, res, next) {
 
 async function remover(req, res, next) {
   try {
-    const id = Number(req.params.id_musica);
+    const id = Number(req.params.id);
     const musicaRemovida = await musicasRepository.remover(id);
     if (!musicaRemovida) {
       return res.status(404).json({
@@ -55,7 +55,7 @@ async function remover(req, res, next) {
 
 async function atualizar(req, res, next) {
   try {
-    const id = Number(req.params.id_musica);
+    const id = Number(req.params.id);
     const musica = await musicasRepository.atualizar(id, req.body);
     if (!musica) {
       return res.status(404).json({

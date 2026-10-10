@@ -19,7 +19,12 @@ const validarMusica = [
     .optional()
     .trim()
     .isLength({ min: 12, max: 12 })
-    .withMessage("O ISRC deve ter exatamente 12 caracteres, sem os traços"),
+    .withMessage("O ISRC deve ter exatamente 12 caracteres, sem os traços")
+    .bail()
+    .matches(/^[A-Z]{2}[A-Z0-9]{3}\d{7}$/)
+    .withMessage(
+      "O ISRC deve estar no formato correto: 2 letras maiúsculas, 3 letras ou números, e 7 dígitos",
+    ),
 
   body("duracao")
     .exists({ checkFalsy: true })
