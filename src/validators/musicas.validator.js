@@ -55,7 +55,10 @@ const validarMusica = [
     .isLength({ max: 500 })
     .withMessage(
       "O caminho do arquivo de áudio deve ter no máximo 500 caracteres",
-    ),
+    )
+    .bail()
+    .isURL()
+    .withMessage("O arquivo da partitura deve ser uma URL válida"),
 
   body("spotify_uri")
     .optional()
