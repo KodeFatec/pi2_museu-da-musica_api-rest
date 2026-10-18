@@ -52,3 +52,13 @@ CREATE table
         foreign key (id_item) references item_acervo (id_item),
         foreign key (id_musica) references musica (id_musica)
     );
+
+CREATE TABLE 
+    musica_favorita (
+        id_usuario INT NOT NULL,
+        id_musica int not null,
+        data_favoritada DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id_usuario, id_musica),
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+        FOREIGN KEY (id_musica) REFERENCES musica(id_musica)
+);

@@ -15,6 +15,8 @@ app.get("/api", (req, res) => {
 
 app.use("/api/musicas", require("./routes/musicas.routes"));
 app.use("/api/partituras", require("./routes/partituras.routes"));
+app.use("/api/musicas-favoritas", require("./routes/musica_favorita.routes"));
+
 
 app.use((req, res) => {
   res.status(404).json({
