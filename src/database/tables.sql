@@ -62,3 +62,14 @@ CREATE TABLE
         FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
         FOREIGN KEY (id_musica) REFERENCES musica(id_musica)
 );
+
+CREATE TABLE
+    artista (
+        id_artista int primary key auto_increment,
+        nome_artistico varchar(150) null,
+        nome_completo varchar(200) null,
+        biografia text null,
+        data_nascimento date null,
+        data_falecimento date null,
+        foto_url varchar(500) null,
+    );
