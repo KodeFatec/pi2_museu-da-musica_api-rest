@@ -55,9 +55,10 @@ CREATE table
 
 CREATE TABLE 
     musica_favorita (
-        id_usuario INT NOT NULL primary key,
+        id_usuario INT NOT NULL,
         id_musica int not null,
-        data_curtida DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (id_usuario)REFERENCES usuario(id_usuario),
-        FOREIGN KEY (id_musica)REFERENCES musica(id_musica)
+        data_favoritada DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY (id_usuario, id_musica),
+        FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
+        FOREIGN KEY (id_musica) REFERENCES musica(id_musica)
 );

@@ -53,7 +53,7 @@ async function remover(req, res, next) {
   }
 }
 
-async function atualizar(req, res, next) {
+/*async function atualizar(req, res, next) {
   try {
     const idUsuario = Number(req.params.id_usuario);
     const musicaFavorita = await musicaFavoritaRepository.atualizar(
@@ -73,5 +73,6 @@ async function atualizar(req, res, next) {
     return next(erro);
   }
 }
+  */
 
-module.exports = { listar, buscarPorId, criar, remover, atualizar };
+module.exports = { listar, buscarPorId, criar, remover };

@@ -1,11 +1,17 @@
 const { pool } = require("../config/database");
+const consultaMusicaFavorita =  "SELECT * FROM musica_favorita";
 
-const consultaMusicaFavorita =
-  "SELECT id_usuario, id_musica, data_curtida FROM musica_favorita";
+function montarMusicaFavorita(linha) {
+  return {
+    id_usuario: linha.id_usuario,
+    id_musica: linha.id_musica,
+    data_favoritada: linha.data_favoritada,
+  };
+}
 
 async function listar() {
   const [linhas] = await pool.query(consultaMusicaFavorita);
-  return linhas;
+  return linhas.map(montarMusicaFavorita);
 }
 
 async function buscarPorId(idUsuario) {
@@ -13,18 +19,23 @@ async function buscarPorId(idUsuario) {
     `${consultaMusicaFavorita} WHERE id_usuario = ?`,
     [idUsuario],
   );
-  return linhas[0] ?? null;
+  if (linhas.length === 0) {
+    return null;
+  }
+  return montarMusicaFavorita(linhas[0]);
 }
 
-async function criar(dados) {
-  await pool.execute(
-    "INSERT INTO musica_favorita (id_usuario, id_musica) VALUES (?, ?)",
-    [dados.id_usuario, dados.id_musica],
-  );
-  return buscarPorId(dados.id_usuario);
+async function criar(dadosMusica) {
+  const musicaFavorita = {
+    id_usuario: dadosMusica.id_usuario,
+    id_musica: dadosMusica.id_musica,
+  };
+  const sql = "insert into musica_favorita SET ?";
+  const [resultado] = await pool.query(sql, [musicaFavorita]);
+  return buscarPorId(resultado.insertId);
 }
 
-async function atualizar(idUsuario, idMusica) {
+/*async function atualizar(idUsuario, idMusica) {
   const existente = await buscarPorId(idUsuario);
   if (!existente) {
     return null;
@@ -38,6 +49,7 @@ async function atualizar(idUsuario, idMusica) {
   );
   return buscarPorId(idUsuario);
 }
+*/
 
 async function remover(idUsuario) {
   const [resultado] = await pool.execute(
@@ -47,4 +59,4 @@ async function remover(idUsuario) {
   return resultado.affectedRows > 0;
 }
 
-module.exports = { listar, buscarPorId, criar, atualizar, remover };
+module.exports = { listar, buscarPorId, criar, remover };
