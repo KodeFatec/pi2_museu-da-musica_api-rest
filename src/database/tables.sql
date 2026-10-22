@@ -73,3 +73,25 @@ CREATE TABLE
         data_falecimento date null,
         foto_url varchar(500) null,
     );
+
+CREATE TABLE
+    letra_trecho (
+        id_trecho int primary key auto_increment,
+        id_musica int not null,
+        tempo_inicio time not null,
+        tempo_fim time not null,
+        ordem int not null,
+        texto text not null,
+        foreign key (id_musica) references musica (id_musica),
+    );
+
+CREATE TABLE
+    historico_musica (
+        id_historico bigint primary key auto_increment,
+        id_usuario int not null,
+        id_musica int not null,
+        data_reproducao datetime not null default current_timestamp,
+        progresso time null,
+        foreign key (id_usuario) references usuario (id_usuario),
+        foreign key (id_musica) references musica (id_musica)
+    );
