@@ -1,5 +1,18 @@
-const { body, param } = require("express-validator");
+const { body } = require("express-validator");
+const { pool } = require("../config/database");
 const tiposCliente = ["PF", "PJ"];
+
+async function validarEmailUnico(email, { req }) {
+  const idCliente = req.params.id ?? null;
+  const [clientes] = await pool.execute(
+    "SELECT id FROM clientes WHERE email = ? AND (? IS NULL OR id <> ?)",
+    [email, idCliente, idCliente],
+  );
+
+  if (clientes.length > 0) {
+    throw new Error("Este e-mail já está cadastrado");
+  }
+}
 
 const validarCliente = [
   body("tipo")
@@ -23,7 +36,9 @@ const validarCliente = [
     .bail()
     .trim()
     .isEmail()
-    .withMessage("Informe um e-mail válido"),
+    .withMessage("Informe um e-mail válido")
+    .bail()
+    .custom(validarEmailUnico),
 
   body("telefone")
     .exists({ checkFalsy: true })

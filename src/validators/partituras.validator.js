@@ -1,6 +1,40 @@
 const { body } = require("express-validator");
+const { pool } = require("../config/database");
 
 const anoAtual = new Date().getFullYear();
+
+async function validarCategoriaExistente(idCategoria) {
+  const [categorias] = await pool.execute(
+    "SELECT id_categoria FROM categoria WHERE id_categoria = ?",
+    [idCategoria],
+  );
+
+  if (categorias.length === 0) {
+    throw new Error("A categoria informada não está cadastrada");
+  }
+}
+
+async function validarUsuarioExistente(idUsuario) {
+  const [usuarios] = await pool.execute(
+    "SELECT id_usuario FROM usuario WHERE id_usuario = ?",
+    [idUsuario],
+  );
+
+  if (usuarios.length === 0) {
+    throw new Error("O usuário informado não está cadastrado");
+  }
+}
+
+async function validarMusicaExistente(idMusica) {
+  const [musicas] = await pool.execute(
+    "SELECT id_musica FROM musica WHERE id_musica = ?",
+    [idMusica],
+  );
+
+  if (musicas.length === 0) {
+    throw new Error("A música informada não está cadastrada");
+  }
+}
 
 const validarPartitura = [
   body("id_categoria")
@@ -9,7 +43,9 @@ const validarPartitura = [
     .bail()
     .isInt({ min: 1 })
     .withMessage("O id da categoria deve ser um número inteiro positivo")
-    .toInt(),
+    .toInt()
+    .bail()
+    .custom(validarCategoriaExistente),
 
   body("titulo")
     .exists({ checkFalsy: true })
@@ -50,13 +86,17 @@ const validarPartitura = [
     .withMessage(
       "O id do usuário responsável pelo cadastro deve ser um número inteiro positivo",
     )
-    .toInt(),
+    .toInt()
+    .bail()
+    .custom(validarUsuarioExistente),
 
   body("id_musica")
     .optional()
     .isInt({ min: 1 })
     .withMessage("O id da música deve ser um número inteiro positivo")
-    .toInt(),
+    .toInt()
+    .bail()
+    .custom(validarMusicaExistente),
 
   body("autor")
     .optional()
@@ -66,8 +106,8 @@ const validarPartitura = [
 
   body("ano_criacao")
     .optional()
-    .isInt({ min: 0, max: 2026 })
-    .withMessage("O ano de gravação deve ser um número inteiro entre 0 e 2026")
+    .isInt({ min: 0, max: anoAtual })
+    .withMessage("O ano de gravação deve ser um número inteiro entre 0 e o ano atual")
     .toInt(),
 
   body("arquivo_url")
