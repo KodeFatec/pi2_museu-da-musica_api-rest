@@ -1,5 +1,5 @@
 const { pool } = require("../config/database");
-const consultaMusicaFavorita =  "SELECT * FROM musica_favorita";
+const consultaMusicaFavorita = "SELECT * FROM musica_favorita";
 
 function montarMusicaFavorita(linha) {
   return {
@@ -14,15 +14,12 @@ async function listar() {
   return linhas.map(montarMusicaFavorita);
 }
 
-async function buscarPorId(idUsuario) {
+async function buscarPorUsuario(idUsuario) {
   const [linhas] = await pool.execute(
     `${consultaMusicaFavorita} WHERE id_usuario = ?`,
     [idUsuario],
   );
-  if (linhas.length === 0) {
-    return null;
-  }
-  return montarMusicaFavorita(linhas[0]);
+  return linhas.map(montarMusicaFavorita);
 }
 
 async function criar(dadosMusica) {
@@ -32,7 +29,11 @@ async function criar(dadosMusica) {
   };
   const sql = "insert into musica_favorita SET ?";
   const [resultado] = await pool.query(sql, [musicaFavorita]);
-  return buscarPorId(resultado.insertId);
+  const [linhas] = await pool.execute(
+    `${consultaMusicaFavorita} WHERE id_usuario = ? AND id_musica = ?`,
+    [musicaFavorita.id_usuario, musicaFavorita.id_musica],
+  );
+  return linhas.length ? montarMusicaFavorita(linhas[0]) : null;
 }
 
 /*async function atualizar(idUsuario, idMusica) {
@@ -51,12 +52,14 @@ async function criar(dadosMusica) {
 }
 */
 
-async function remover(idUsuario) {
+async function remover(idUsuario, idMusica) {
   const [resultado] = await pool.execute(
-    "DELETE FROM musica_favorita WHERE id_usuario = ?",
-    [idUsuario],
+    idMusica === undefined
+      ? "DELETE FROM musica_favorita WHERE id_usuario = ?"
+      : "DELETE FROM musica_favorita WHERE id_usuario = ? AND id_musica = ?",
+    idMusica === undefined ? [idUsuario] : [idUsuario, idMusica],
   );
   return resultado.affectedRows > 0;
 }
 
-module.exports = { listar, buscarPorId, criar, remover };
+module.exports = { listar, buscarPorUsuario, criar, remover };

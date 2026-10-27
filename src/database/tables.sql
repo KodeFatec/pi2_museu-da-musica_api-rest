@@ -71,7 +71,17 @@ CREATE TABLE
         biografia text null,
         data_nascimento date null,
         data_falecimento date null,
-        foto_url varchar(500) null,
+        foto_url varchar(500) null
+    );
+
+CREATE TABLE
+    musica_artista (
+        id_musica int not null,
+        id_artista int not null,
+        tipo_participacao varchar(150) null,
+        PRIMARY KEY (id_musica, id_artista),
+        FOREIGN KEY (id_musica) REFERENCES musica (id_musica),
+        FOREIGN KEY (id_artista) REFERENCES artista (id_artista)
     );
 
 CREATE TABLE
@@ -81,12 +91,12 @@ CREATE TABLE
         tempo_inicio time not null,
         tempo_fim time not null,
         ordem int not null,
-        texto text not null,
+        texto text not null
         foreign key (id_musica) references musica (id_musica),
     );
 
 CREATE TABLE
-    historico_musica (
+    historico_musicas (
         id_historico bigint primary key auto_increment,
         id_usuario int not null,
         id_musica int not null,

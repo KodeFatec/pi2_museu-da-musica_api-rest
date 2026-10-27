@@ -24,8 +24,9 @@ router.post(
   musicaFavoritaController.atualizar,
 );*/
 router.delete(
-  "/:id_usuario",
+  "/:id_usuario/:id_musica",
   musicaFavoritaController.remover,
 );
+router.delete("/:id_usuario", musicaFavoritaController.remover);
 
 module.exports = router;
