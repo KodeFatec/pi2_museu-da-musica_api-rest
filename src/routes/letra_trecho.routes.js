@@ -5,6 +5,7 @@ const {
   validarIdTrecho,
 } = require("../validators/letra_trecho.validator");
 const validarResultado = require("../middleware/validarResultado");
+const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 
 const router = express.Router();
 
@@ -21,12 +22,14 @@ router.get(
 );
 router.post(
   "/",
+  autenticarJwt,
   validarLetraTrecho,
   validarResultado,
   letraTrechoController.criar,
 );
 router.put(
   "/:id",
+  autenticarJwt,
   validarIdTrecho,
   validarLetraTrecho,
   validarResultado,
@@ -34,6 +37,7 @@ router.put(
 );
 router.delete(
   "/:id",
+  autenticarJwt,
   validarIdTrecho,
   validarResultado,
   letraTrechoController.remover,

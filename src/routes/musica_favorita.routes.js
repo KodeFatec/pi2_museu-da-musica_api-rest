@@ -2,16 +2,14 @@ const express = require("express");
 const musicaFavoritaController = require("../controllers/musica_favorita.controller");
 const validarResultado = require("../middleware/validarResultado");
 const { validarMusicaFavorita } = require("../validators/musica_favorita.validator");
+const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 
 const router = express.Router();
 
-router.get("/", musicaFavoritaController.listar);
-router.get(
-  "/:id_usuario",
-  musicaFavoritaController.buscarPorId,
-);
+router.get("/", autenticarJwt, musicaFavoritaController.listar);
 router.post(
   "/",
+  autenticarJwt,
   validarMusicaFavorita,
   validarResultado,
   musicaFavoritaController.criar,
@@ -24,9 +22,9 @@ router.post(
   musicaFavoritaController.atualizar,
 );*/
 router.delete(
-  "/:id_usuario/:id_musica",
+  "/:id_musica",
+  autenticarJwt,
   musicaFavoritaController.remover,
 );
-router.delete("/:id_usuario", musicaFavoritaController.remover);
 
 module.exports = router;

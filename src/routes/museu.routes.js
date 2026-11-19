@@ -1,0 +1,12 @@
+const express = require("express");
+const controller = require("../controllers/museu.controller");
+const { validarMuseu } = require("../validators/museu.validator");
+const validarResultado = require("../middleware/validarResultado");
+const { autenticarJwt } = require("../middleware/autenticacaoJwt");
+const router = express.Router();
+router.get("/", controller.listar);
+router.get("/:id", controller.buscarPorId);
+router.post("/", autenticarJwt, validarMuseu, validarResultado, controller.criar);
+router.put("/:id", autenticarJwt, validarMuseu, validarResultado, controller.atualizar);
+router.delete("/:id", autenticarJwt, controller.remover);
+module.exports = router;

@@ -1,5 +1,5 @@
 const { pool } = require("../config/database");
-const consultaHistorico = "select * from historico_musicas";
+const consultaHistorico = "select * from historico_musica";
 
 function montarHistorico(linha) {
   return {
@@ -15,11 +15,18 @@ async function listar() {
   const [linhas] = await pool.query(consultaHistorico);
   return linhas.map(montarHistorico);
 }
+async function listarPorUsuario(idUsuario) {
+  const [linhas] = await pool.execute(
+    `${consultaHistorico} WHERE id_usuario = ? ORDER BY data_reproducao DESC`,
+    [idUsuario],
+  );
+  return linhas.map(montarHistorico);
+}
 
-async function buscarPorId(id) {
+async function buscarPorId(id, idUsuario) {
   const [linhas] = await pool.query(
-    `${consultaHistorico} WHERE id_historico = ?`,
-    [id],
+    `${consultaHistorico} WHERE id_historico = ?${idUsuario ? " AND id_usuario = ?" : ""}`,
+    idUsuario ? [id, idUsuario] : [id],
   );
   if (linhas.length === 0) {
     return null;
@@ -33,7 +40,7 @@ async function criar(dadosHistorico) {
     id_musica: dadosHistorico.id_musica,
     progresso: dadosHistorico.progresso ?? null,
   };
-  const sql = "insert into historico_musicas SET ?";
+  const sql = "insert into historico_musica SET ?";
   const [resultado] = await pool.query(sql, [historico]);
   return buscarPorId(resultado.insertId);
 }
@@ -43,7 +50,7 @@ async function atualizar(id, dadosHistorico) {
   try {
     await conexao.beginTransaction();
     const [resultadoHistorico] = await conexao.execute(
-      `UPDATE historico_musicas
+      `UPDATE historico_musica
         SET id_usuario=?, id_musica=?, progresso=?
         WHERE id_historico=?`,
       [
@@ -70,10 +77,10 @@ async function atualizar(id, dadosHistorico) {
 
 async function remover(id) {
   const [resultado] = await pool.execute(
-    "DELETE FROM historico_musicas WHERE id_historico=?",
+    "DELETE FROM historico_musica WHERE id_historico=?",
     [id],
   );
   return resultado.affectedRows > 0;
 }
 
-module.exports = { listar, buscarPorId, criar, atualizar, remover };
+module.exports = { listar, listarPorUsuario, buscarPorId, criar, atualizar, remover };

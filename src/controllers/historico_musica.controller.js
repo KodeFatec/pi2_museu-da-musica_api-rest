@@ -2,7 +2,7 @@ const historicoMusicaRepository = require("../repositories/historico_musica.repo
 
 async function listar(req, res, next) {
   try {
-    const historico = await historicoMusicaRepository.listar();
+    const historico = await historicoMusicaRepository.listarPorUsuario(req.usuario.id_usuario);
     return res.json({
       total: historico.length,
       dados: historico,
@@ -15,7 +15,7 @@ async function listar(req, res, next) {
 async function buscarPorId(req, res, next) {
   try {
     const id = Number(req.params.id);
-    const registro = await historicoMusicaRepository.buscarPorId(id);
+    const registro = await historicoMusicaRepository.buscarPorId(id, req.usuario.id_usuario);
     if (!registro) {
       return res.status(404).json({
         erro: "Registro de histórico não encontrado",
@@ -29,7 +29,10 @@ async function buscarPorId(req, res, next) {
 
 async function criar(req, res, next) {
   try {
-    const registro = await historicoMusicaRepository.criar(req.body);
+    const registro = await historicoMusicaRepository.criar({
+      ...req.body,
+      id_usuario: req.usuario.id_usuario,
+    });
     return res.status(201).json({
       mensagem: "Repodução registrada no histórico com sucesso",
       dados: registro,

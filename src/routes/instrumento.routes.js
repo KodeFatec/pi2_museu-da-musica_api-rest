@@ -1,0 +1,12 @@
+const express = require("express");
+const controller = require("../controllers/instrumento.controller");
+const { validarInstrumento } = require("../validators/instrumento.validator");
+const validarResultado = require("../middleware/validarResultado");
+const { autenticarJwt } = require("../middleware/autenticacaoJwt");
+const router = express.Router();
+router.get("/", controller.listar);
+router.get("/:id", controller.buscarPorId);
+router.post("/", autenticarJwt, validarInstrumento, validarResultado, controller.criar);
+router.put("/:id", autenticarJwt, validarInstrumento, validarResultado, controller.atualizar);
+router.delete("/:id", autenticarJwt, controller.remover);
+module.exports = router;
