@@ -5,7 +5,10 @@ async function listar() {
   return linhas;
 }
 async function buscarPorId(id) {
-  const [linhas] = await pool.execute("SELECT * FROM genero_musical WHERE id_genero = ?", [id]);
+  const [linhas] = await pool.execute(
+    "SELECT * FROM genero_musical WHERE id_genero = ?",
+    [id],
+  );
   return linhas[0] ?? null;
 }
 async function criar(dados) {
@@ -23,7 +26,10 @@ async function atualizar(id, dados) {
   return resultado.affectedRows ? buscarPorId(id) : null;
 }
 async function remover(id) {
-  const [resultado] = await pool.execute("DELETE FROM genero_musical WHERE id_genero = ?", [id]);
+  const [resultado] = await pool.execute(
+    "DELETE FROM genero_musical WHERE id_genero = ?",
+    [id],
+  );
   return resultado.affectedRows > 0;
 }
 module.exports = { listar, buscarPorId, criar, atualizar, remover };

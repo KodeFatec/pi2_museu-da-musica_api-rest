@@ -6,7 +6,19 @@ const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 const router = express.Router();
 router.get("/", controller.listar);
 router.get("/:id", controller.buscarPorId);
-router.post("/", autenticarJwt, validarItemAcervo, validarResultado, controller.criar);
-router.put("/:id", autenticarJwt, validarItemAcervo, validarResultado, controller.atualizar);
+router.post(
+  "/",
+  autenticarJwt,
+  validarItemAcervo,
+  validarResultado,
+  controller.criar,
+);
+router.put(
+  "/:id",
+  autenticarJwt,
+  validarItemAcervo,
+  validarResultado,
+  controller.atualizar,
+);
 router.delete("/:id", autenticarJwt, controller.remover);
 module.exports = router;

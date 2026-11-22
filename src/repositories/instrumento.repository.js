@@ -52,19 +52,34 @@ function agrupar(linhas) {
 async function criar(dados) {
   const [resultado] = await pool.execute(
     "INSERT INTO instrumento (id_item, tipo_instrumento, fabricante, ano_fabricacao, antigo_dono) VALUES (?, ?, ?, ?, ?)",
-    [dados.id_item, dados.tipo_instrumento ?? null, dados.fabricante ?? null, dados.ano_fabricacao ?? null, dados.antigo_dono ?? null],
+    [
+      dados.id_item,
+      dados.tipo_instrumento ?? null,
+      dados.fabricante ?? null,
+      dados.ano_fabricacao ?? null,
+      dados.antigo_dono ?? null,
+    ],
   );
   return buscarPorId(dados.id_item);
 }
 async function atualizar(id, dados) {
   const [resultado] = await pool.execute(
     "UPDATE instrumento SET tipo_instrumento = ?, fabricante = ?, ano_fabricacao = ?, antigo_dono = ? WHERE id_item = ?",
-    [dados.tipo_instrumento ?? null, dados.fabricante ?? null, dados.ano_fabricacao ?? null, dados.antigo_dono ?? null, id],
+    [
+      dados.tipo_instrumento ?? null,
+      dados.fabricante ?? null,
+      dados.ano_fabricacao ?? null,
+      dados.antigo_dono ?? null,
+      id,
+    ],
   );
   return resultado.affectedRows ? buscarPorId(id) : null;
 }
 async function remover(id) {
-  const [resultado] = await pool.execute("DELETE FROM instrumento WHERE id_item = ?", [id]);
+  const [resultado] = await pool.execute(
+    "DELETE FROM instrumento WHERE id_item = ?",
+    [id],
+  );
   return resultado.affectedRows > 0;
 }
 module.exports = { listar, buscarPorId, criar, atualizar, remover };

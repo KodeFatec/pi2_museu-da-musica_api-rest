@@ -9,11 +9,7 @@ const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 
 const router = express.Router();
 
-router.get(
-  "/",
-  validarResultado,
-  letraTrechoController.listar,
-);
+router.get("/", validarResultado, letraTrechoController.listar);
 router.get(
   "/:id",
   validarIdTrecho,

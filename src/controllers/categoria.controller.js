@@ -35,7 +35,10 @@ async function criar(req, res, next) {
 
 async function atualizar(req, res, next) {
   try {
-    const categoria = await categoriaRepository.atualizar(req.params.id, req.body);
+    const categoria = await categoriaRepository.atualizar(
+      req.params.id,
+      req.body,
+    );
     if (!categoria) {
       return res.status(404).json({ erro: "Categoria não encontrada" });
     }

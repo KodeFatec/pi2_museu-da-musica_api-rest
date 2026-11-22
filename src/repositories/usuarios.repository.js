@@ -30,21 +30,47 @@ async function buscarPorId(id) {
 }
 
 async function buscarPorEmail(email) {
-  const [linhas] = await pool.execute(
-    "SELECT * FROM usuario WHERE email = ?",
-    [email],
-  );
+  const [linhas] = await pool.execute("SELECT * FROM usuario WHERE email = ?", [
+    email,
+  ]);
   return linhas.length ? linhas[0] : null;
+}
+
+async function buscarPorEmailOuCpf(identificador) {
+  if (!identificador) return null;
+  const limpo = String(identificador).trim();
+  const apenasDigitos = limpo.replace(/\D/g, "");
+
+  if (apenasDigitos.length === 11) {
+    const [porCpf] = await pool.execute(
+      "SELECT * FROM usuario WHERE cpf = ? OR email = ?",
+      [apenasDigitos, limpo.toLowerCase()],
+    );
+    if (porCpf.length) return porCpf[0];
+  }
+
+  const [porEmail] = await pool.execute(
+    "SELECT * FROM usuario WHERE email = ?",
+    [limpo.toLowerCase()],
+  );
+  return porEmail.length ? porEmail[0] : null;
 }
 
 async function criar(dados) {
   const senhaHash = dados.senha
     ? await bcrypt.hash(dados.senha, 10)
-    : dados.senha_hash ?? null;
+    : (dados.senha_hash ?? null);
   const idUsuario = crypto.randomUUID();
   const [resultado] = await pool.execute(
     "INSERT INTO usuario (id_usuario, nome, cpf, email, senha_hash, telefone) VALUES (?, ?, ?, ?, ?, ?)",
-    [idUsuario, dados.nome, dados.cpf ?? null, dados.email, senhaHash, dados.telefone ?? null],
+    [
+      idUsuario,
+      dados.nome,
+      dados.cpf ?? null,
+      dados.email,
+      senhaHash,
+      dados.telefone ?? null,
+    ],
   );
   return resultado.affectedRows ? buscarPorId(idUsuario) : null;
 }
@@ -90,5 +116,12 @@ async function verificarSenha(senha, usuario) {
 }
 
 module.exports = {
-  listar, buscarPorId, buscarPorEmail, criar, atualizar, remover, verificarSenha,
+  listar,
+  buscarPorId,
+  buscarPorEmail,
+  buscarPorEmailOuCpf,
+  criar,
+  atualizar,
+  remover,
+  verificarSenha,
 };

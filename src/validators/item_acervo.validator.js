@@ -5,6 +5,9 @@ const validarItemAcervo = [
   body("descricao").optional({ nullable: true }).trim(),
   body("origem").optional({ nullable: true }).trim().isLength({ max: 200 }),
   body("data_aquisicao").optional({ nullable: true }).isISO8601(),
-  body("estado_conservacao").optional({ nullable: true }).trim().isLength({ max: 50 }),
+  body("estado_conservacao")
+    .optional({ nullable: true })
+    .trim()
+    .isLength({ max: 50 }),
 ];
 module.exports = { validarItemAcervo };

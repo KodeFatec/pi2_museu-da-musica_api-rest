@@ -53,7 +53,10 @@ async function atualizar(id, dados) {
   return resultado.affectedRows ? buscarPorId(id) : null;
 }
 async function remover(id) {
-  const [resultado] = await pool.execute("DELETE FROM item_acervo WHERE id_item = ?", [id]);
+  const [resultado] = await pool.execute(
+    "DELETE FROM item_acervo WHERE id_item = ?",
+    [id],
+  );
   return resultado.affectedRows > 0;
 }
 module.exports = { listar, buscarPorId, criar, atualizar, remover };

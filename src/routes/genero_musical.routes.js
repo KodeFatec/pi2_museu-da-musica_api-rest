@@ -7,8 +7,20 @@ const router = express.Router();
 
 router.get("/", controller.listar);
 router.get("/:id", controller.buscarPorId);
-router.post("/", autenticarJwt, validarGenero, validarResultado, controller.criar);
-router.put("/:id", autenticarJwt, validarGenero, validarResultado, controller.atualizar);
+router.post(
+  "/",
+  autenticarJwt,
+  validarGenero,
+  validarResultado,
+  controller.criar,
+);
+router.put(
+  "/:id",
+  autenticarJwt,
+  validarGenero,
+  validarResultado,
+  controller.atualizar,
+);
 router.delete("/:id", autenticarJwt, controller.remover);
 
 module.exports = router;

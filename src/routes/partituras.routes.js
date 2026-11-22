@@ -8,7 +8,13 @@ const router = express.Router();
 
 router.get("/", partiturasController.listar);
 router.get("/:id", partiturasController.buscarPorId);
-router.post("/", autenticarJwt, validarPartitura, validarResultado, partiturasController.criar);
+router.post(
+  "/",
+  autenticarJwt,
+  validarPartitura,
+  validarResultado,
+  partiturasController.criar,
+);
 router.put(
   "/:id",
   autenticarJwt,

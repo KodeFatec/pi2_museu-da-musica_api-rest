@@ -83,4 +83,11 @@ async function remover(id) {
   return resultado.affectedRows > 0;
 }
 
-module.exports = { listar, listarPorUsuario, buscarPorId, criar, atualizar, remover };
+module.exports = {
+  listar,
+  listarPorUsuario,
+  buscarPorId,
+  criar,
+  atualizar,
+  remover,
+};

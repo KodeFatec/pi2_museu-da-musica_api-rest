@@ -48,11 +48,7 @@ async function atualizar(idMusica, idArtista, dadosMusicaArtista) {
     `UPDATE musica_artista
      SET tipo_participacao = ?
      WHERE id_musica = ? AND id_artista = ?`,
-    [
-      dadosMusicaArtista.tipo_participacao ?? null,
-      idMusica,
-      idArtista,
-    ],
+    [dadosMusicaArtista.tipo_participacao ?? null, idMusica, idArtista],
   );
 
   return buscarPorId(idMusica, idArtista);

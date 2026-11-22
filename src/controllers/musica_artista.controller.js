@@ -3,13 +3,12 @@ const musicaArtistaRepository = require("../repositories/musica_artista.reposito
 async function listar(req, res, next) {
   try {
     const valorIdMusica = req.query.id_musica;
-    const idMusica = valorIdMusica === undefined
-      ? undefined
-      : Number(valorIdMusica);
+    const idMusica =
+      valorIdMusica === undefined ? undefined : Number(valorIdMusica);
 
     if (
-      idMusica !== undefined
-      && (!Number.isInteger(idMusica) || idMusica < 1)
+      idMusica !== undefined &&
+      (!Number.isInteger(idMusica) || idMusica < 1)
     ) {
       return res.status(400).json({
         erro: "O id da música deve ser um número inteiro positivo",

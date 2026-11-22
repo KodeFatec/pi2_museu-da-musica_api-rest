@@ -25,7 +25,10 @@ async function registrar(idItem, dados) {
       [idItem, dados.id_sala, dados.data_inicio ?? null],
     );
     await conexao.commit();
-    const [linhas] = await pool.execute("SELECT * FROM item_localizacao WHERE id_localizacao = ?", [resultado.insertId]);
+    const [linhas] = await pool.execute(
+      "SELECT * FROM item_localizacao WHERE id_localizacao = ?",
+      [resultado.insertId],
+    );
     return linhas[0] ?? null;
   } catch (erro) {
     await conexao.rollback();

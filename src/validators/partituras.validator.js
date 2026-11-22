@@ -107,7 +107,9 @@ const validarPartitura = [
   body("ano_criacao")
     .optional()
     .isInt({ min: 0, max: anoAtual })
-    .withMessage("O ano de gravação deve ser um número inteiro entre 0 e o ano atual")
+    .withMessage(
+      "O ano de gravação deve ser um número inteiro entre 0 e o ano atual",
+    )
     .toInt(),
 
   body("arquivo_url")

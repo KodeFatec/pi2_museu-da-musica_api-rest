@@ -8,7 +8,13 @@ const router = express.Router();
 
 router.get("/", musicasController.listar);
 router.get("/:id", musicasController.buscarPorId);
-router.post("/", autenticarJwt, validarMusica, validarResultado, musicasController.criar);
+router.post(
+  "/",
+  autenticarJwt,
+  validarMusica,
+  validarResultado,
+  musicasController.criar,
+);
 router.put(
   "/:id",
   autenticarJwt,

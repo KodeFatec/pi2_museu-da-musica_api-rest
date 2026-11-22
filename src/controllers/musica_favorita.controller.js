@@ -1,7 +1,9 @@
 const musicaFavoritaRepository = require("../repositories/musica_favorita.repository");
 async function listar(req, res, next) {
   try {
-    const musicasFavoritas = await musicaFavoritaRepository.buscarPorUsuario(req.usuario.id_usuario);
+    const musicasFavoritas = await musicaFavoritaRepository.buscarPorUsuario(
+      req.usuario.id_usuario,
+    );
     return res.json({
       total: musicasFavoritas.length,
       dados: musicasFavoritas,
@@ -14,7 +16,8 @@ async function listar(req, res, next) {
 async function buscarPorId(req, res, next) {
   try {
     const idUsuario = req.usuario?.id_usuario;
-    const musicasFavoritas = await musicaFavoritaRepository.buscarPorUsuario(idUsuario);
+    const musicasFavoritas =
+      await musicaFavoritaRepository.buscarPorUsuario(idUsuario);
     if (musicasFavoritas.length === 0) {
       return res.status(404).json({
         erro: "Música favorita não encontrada para este usuário",
@@ -47,7 +50,10 @@ async function criar(req, res, next) {
 async function remover(req, res, next) {
   try {
     const idMusica = Number(req.params.id_musica);
-    const removida = await musicaFavoritaRepository.remover(req.usuario.id_usuario, idMusica);
+    const removida = await musicaFavoritaRepository.remover(
+      req.usuario.id_usuario,
+      idMusica,
+    );
     if (!removida) {
       return res.status(404).json({
         erro: "Música favorita não encontrada para este usuário",
