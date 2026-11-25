@@ -4,6 +4,7 @@ const { validarCategoria } = require("../validators/categoria.validator");
 const validarResultado = require("../middleware/validarResultado");
 const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 const router = express.Router();
+
 router.get("/", controller.listar);
 router.get("/:id", controller.buscarPorId);
 router.post(
@@ -21,4 +22,5 @@ router.put(
   controller.atualizar,
 );
 router.delete("/:id", autenticarJwt, controller.remover);
+
 module.exports = router;

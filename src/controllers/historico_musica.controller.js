@@ -22,9 +22,10 @@ async function buscarPorId(req, res, next) {
       req.usuario.id_usuario,
     );
     if (!registro) {
-      return res.status(404).json({
-        erro: "Registro de histórico não encontrado",
-      });
+      return res.status(404)
+        .json({
+          erro: "Registro de histórico não encontrado",
+        });
     }
     return res.json(registro);
   } catch (erro) {
@@ -38,10 +39,11 @@ async function criar(req, res, next) {
       ...req.body,
       id_usuario: req.usuario.id_usuario,
     });
-    return res.status(201).json({
-      mensagem: "Repodução registrada no histórico com sucesso",
-      dados: registro,
-    });
+    return res.status(201)
+      .json({
+        mensagem: "Repodução registrada no histórico com sucesso",
+        dados: registro,
+      });
   } catch (erro) {
     return next(erro);
   }
@@ -52,9 +54,10 @@ async function atualizar(req, res, next) {
     const id = Number(req.params.id);
     const registro = await historicoMusicaRepository.atualizar(id, req.body);
     if (!registro) {
-      return res.status(404).json({
-        erro: "Registro de histórico não encontrado para a alteração",
-      });
+      return res.status(404)
+        .json({
+          erro: "Registro de histórico não encontrado para a alteração",
+        });
     }
     return res.json({
       mensagem: "Registro de histórico atualizado com sucesso",
@@ -70,11 +73,13 @@ async function remover(req, res, next) {
     const id = Number(req.params.id);
     const removido = await historicoMusicaRepository.remover(id);
     if (!removido) {
-      return res.status(404).json({
-        erro: "Registro de histórico não encontrado",
-      });
+      return res.status(404)
+        .json({
+          erro: "Registro de histórico não encontrado",
+        });
     }
-    return res.status(204).send();
+    return res.status(204)
+      .send();
   } catch (erro) {
     return next(erro);
   }

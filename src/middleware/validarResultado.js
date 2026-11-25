@@ -6,13 +6,15 @@ function validarResultado(req, res, next) {
     return next();
   }
 
-  return res.status(400).json({
-    erro: "Dados inválidos!",
-    detalhes: resultado.array().map((erro) => ({
-      campo: erro.path,
-      mensagem: erro.msg,
-      valorRecebido: erro.value,
-    })),
-  });
+  return res.status(400)
+    .json({
+      erro: "Dados inválidos!",
+      detalhes: resultado.array()
+        .map((erro) => ({
+          campo: erro.path,
+          mensagem: erro.msg,
+          valorRecebido: erro.value,
+        })),
+    });
 }
 module.exports = validarResultado;

@@ -5,7 +5,9 @@ const {
   validarLocalizacao,
 } = require("../validators/item_localizacao.validator");
 const { autenticarJwt } = require("../middleware/autenticacaoJwt");
+
 const router = express.Router();
+
 router.get("/:id/localizacoes", controller.listar);
 router.post(
   "/:id/localizacoes",
@@ -15,4 +17,5 @@ router.post(
   controller.registrar,
 );
 router.delete("/:id/localizacoes/atual", autenticarJwt, controller.encerrar);
+
 module.exports = router;

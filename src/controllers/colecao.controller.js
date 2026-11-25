@@ -12,7 +12,8 @@ async function buscarPorId(req, res, next) {
     const dado = await repository.buscarPorId(req.params.id);
     return dado
       ? res.json(dado)
-      : res.status(404).json({ erro: "Coleção não encontrada" });
+      : res.status(404)
+        .json({ erro: "Coleção não encontrada" });
   } catch (e) {
     return next(e);
   }
@@ -34,7 +35,8 @@ async function atualizar(req, res, next) {
     const dado = await repository.atualizar(req.params.id, req.body);
     return dado
       ? res.json({ mensagem: "Coleção atualizada com sucesso", dados: dado })
-      : res.status(404).json({ erro: "Coleção não encontrada" });
+      : res.status(404)
+        .json({ erro: "Coleção não encontrada" });
   } catch (e) {
     return next(e);
   }
@@ -42,8 +44,10 @@ async function atualizar(req, res, next) {
 async function remover(req, res, next) {
   try {
     return (await repository.remover(req.params.id))
-      ? res.status(204).send()
-      : res.status(404).json({ erro: "Coleção não encontrada" });
+      ? res.status(204)
+        .send()
+      : res.status(404)
+        .json({ erro: "Coleção não encontrada" });
   } catch (e) {
     return next(e);
   }
@@ -80,8 +84,10 @@ async function adicionarItem(req, res, next) {
 async function removerItem(req, res, next) {
   try {
     return (await repository.removerItem(req.params.id, req.params.idItem))
-      ? res.status(204).send()
-      : res.status(404).json({ erro: "Associação não encontrada" });
+      ? res.status(204)
+        .send()
+      : res.status(404)
+        .json({ erro: "Associação não encontrada" });
   } catch (e) {
     return next(e);
   }

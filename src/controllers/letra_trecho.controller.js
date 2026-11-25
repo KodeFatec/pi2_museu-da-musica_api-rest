@@ -16,9 +16,10 @@ async function buscarPorId(req, res, next) {
     const id = Number(req.params.id);
     const trecho = await letraTrechoRepository.buscarPorId(id);
     if (!trecho) {
-      return res.status(404).json({
-        erro: "Trecho de letra não encontrado",
-      });
+      return res.status(404)
+        .json({
+          erro: "Trecho de letra não encontrado",
+        });
     }
     return res.json(trecho);
   } catch (erro) {
@@ -29,10 +30,11 @@ async function buscarPorId(req, res, next) {
 async function criar(req, res, next) {
   try {
     const trecho = await letraTrechoRepository.criar(req.body);
-    return res.status(201).json({
-      mensagem: "Trecho de letra cadastrado com sucesso",
-      dados: trecho,
-    });
+    return res.status(201)
+      .json({
+        mensagem: "Trecho de letra cadastrado com sucesso",
+        dados: trecho,
+      });
   } catch (erro) {
     return next(erro);
   }
@@ -43,11 +45,13 @@ async function remover(req, res, next) {
     const id = Number(req.params.id);
     const trechoRemovido = await letraTrechoRepository.remover(id);
     if (!trechoRemovido) {
-      return res.status(404).json({
-        erro: "Trecho de letra não encontrado",
-      });
+      return res.status(404)
+        .json({
+          erro: "Trecho de letra não encontrado",
+        });
     }
-    return res.status(204).send();
+    return res.status(204)
+      .send();
   } catch (erro) {
     return next(erro);
   }
@@ -58,9 +62,10 @@ async function atualizar(req, res, next) {
     const id = Number(req.params.id);
     const trecho = await letraTrechoRepository.atualizar(id, req.body);
     if (!trecho) {
-      return res.status(404).json({
-        erro: "Trecho de letra não encontrado para a alteração",
-      });
+      return res.status(404)
+        .json({
+          erro: "Trecho de letra não encontrado para a alteração",
+        });
     }
     return res.json({
       mensagem: "Trecho de letra atualizado com sucesso",

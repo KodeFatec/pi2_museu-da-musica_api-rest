@@ -21,8 +21,10 @@ async function registrar(req, res, next) {
 async function encerrar(req, res, next) {
   try {
     return (await repository.encerrar(req.params.id))
-      ? res.status(204).send()
-      : res.status(404).json({ erro: "Nenhuma localização ativa encontrada" });
+      ? res.status(204)
+        .send()
+      : res.status(404)
+        .json({ erro: "Nenhuma localização ativa encontrada" });
   } catch (erro) {
     return next(erro);
   }

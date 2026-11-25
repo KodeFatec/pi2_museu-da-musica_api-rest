@@ -6,7 +6,9 @@ const {
   validarAssociacao,
 } = require("../validators/colecao.validator");
 const { autenticarJwt } = require("../middleware/autenticacaoJwt");
+
 const router = express.Router();
+
 router.get("/", controller.listar);
 router.get("/:id", controller.buscarPorId);
 router.get("/:id/itens", controller.listarItens);
@@ -34,4 +36,5 @@ router.put(
 );
 router.delete("/:id", autenticarJwt, controller.remover);
 router.delete("/:id/itens/:idItem", autenticarJwt, controller.removerItem);
+
 module.exports = router;

@@ -9,7 +9,8 @@ async function autenticarJwt(req, res, next) {
     partesJwt[0].toLowerCase() !== "bearer" ||
     !partesJwt[1]
   ) {
-    return res.status(401).json({ erro: "Informe o token no formato Bearer" });
+    return res.status(401)
+      .json({ erro: "Informe o token no formato Bearer" });
   }
 
   try {
@@ -18,12 +19,14 @@ async function autenticarJwt(req, res, next) {
     });
 
     if (!payload.sub || typeof payload.exp !== "number") {
-      return res.status(401).json({ erro: "Token inválido ou expirado" });
+      return res.status(401)
+        .json({ erro: "Token inválido ou expirado" });
     }
 
     const usuario = await usuariosRepository.buscarPorId(payload.sub);
     if (!usuario) {
-      return res.status(401).json({ erro: "Usuário inexistente ou inativo" });
+      return res.status(401)
+        .json({ erro: "Usuário inexistente ou inativo" });
     }
     req.usuario = usuario;
     return next();
@@ -33,7 +36,8 @@ async function autenticarJwt(req, res, next) {
       erro.name === "TokenExpiredError" ||
       erro.name === "NotBeforeError"
     ) {
-      return res.status(401).json({ erro: "Token inválido ou expirado" });
+      return res.status(401)
+        .json({ erro: "Token inválido ou expirado" });
     }
     return next(erro);
   }

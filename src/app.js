@@ -4,7 +4,7 @@ const path = require("path");
 
 const app = express();
 
-// Middleware de CORS para permitir requisições do frontend (Angular)
+// para permitir requisições do frontend hospedado no Render
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(

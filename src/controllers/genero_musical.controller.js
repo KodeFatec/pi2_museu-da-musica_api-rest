@@ -12,7 +12,8 @@ async function buscarPorId(req, res, next) {
   try {
     const dado = await repository.buscarPorId(req.params.id);
     if (!dado)
-      return res.status(404).json({ erro: "Gênero musical não encontrado" });
+      return res.status(404)
+        .json({ erro: "Gênero musical não encontrado" });
     return res.json(dado);
   } catch (erro) {
     return next(erro);
@@ -34,7 +35,8 @@ async function atualizar(req, res, next) {
   try {
     const dado = await repository.atualizar(req.params.id, req.body);
     if (!dado)
-      return res.status(404).json({ erro: "Gênero musical não encontrado" });
+      return res.status(404)
+        .json({ erro: "Gênero musical não encontrado" });
     return res.json({
       mensagem: "Gênero musical atualizado com sucesso",
       dados: dado,
@@ -46,8 +48,10 @@ async function atualizar(req, res, next) {
 async function remover(req, res, next) {
   try {
     if (!(await repository.remover(req.params.id)))
-      return res.status(404).json({ erro: "Gênero musical não encontrado" });
-    return res.status(204).send();
+      return res.status(404)
+        .json({ erro: "Gênero musical não encontrado" });
+    return res.status(204)
+      .send();
   } catch (erro) {
     return next(erro);
   }

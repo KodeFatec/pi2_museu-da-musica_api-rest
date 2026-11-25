@@ -10,9 +10,10 @@ async function listar(req, res, next) {
       idMusica !== undefined &&
       (!Number.isInteger(idMusica) || idMusica < 1)
     ) {
-      return res.status(400).json({
-        erro: "O id da música deve ser um número inteiro positivo",
-      });
+      return res.status(400)
+        .json({
+          erro: "O id da música deve ser um número inteiro positivo",
+        });
     }
 
     const relacoes = await musicaArtistaRepository.listar(idMusica);
@@ -28,10 +29,11 @@ async function listar(req, res, next) {
 async function criar(req, res, next) {
   try {
     const relacao = await musicaArtistaRepository.criar(req.body);
-    return res.status(201).json({
-      mensagem: "Relação entre música e artista cadastrada com sucesso",
-      dados: relacao,
-    });
+    return res.status(201)
+      .json({
+        mensagem: "Relação entre música e artista cadastrada com sucesso",
+        dados: relacao,
+      });
   } catch (erro) {
     return next(erro);
   }
@@ -47,9 +49,10 @@ async function atualizar(req, res, next) {
       req.body,
     );
     if (!relacao) {
-      return res.status(404).json({
-        erro: "Relação entre música e artista não encontrada para a alteração",
-      });
+      return res.status(404)
+        .json({
+          erro: "Relação entre música e artista não encontrada para a alteração",
+        });
     }
     return res.json({
       mensagem: "Relação entre música e artista atualizada com sucesso",
@@ -66,11 +69,13 @@ async function remover(req, res, next) {
     const idArtista = Number(req.params.id_artista);
     const removida = await musicaArtistaRepository.remover(idMusica, idArtista);
     if (!removida) {
-      return res.status(404).json({
-        erro: "Relação entre música e artista não encontrada",
-      });
+      return res.status(404)
+        .json({
+          erro: "Relação entre música e artista não encontrada",
+        });
     }
-    return res.status(204).send();
+    return res.status(204)
+      .send();
   } catch (erro) {
     return next(erro);
   }

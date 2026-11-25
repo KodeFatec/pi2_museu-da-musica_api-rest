@@ -12,7 +12,8 @@ async function buscarPorId(req, res, next) {
   try {
     const instrumento = await instrumentoRepository.buscarPorId(req.params.id);
     if (!instrumento)
-      return res.status(404).json({ erro: "Instrumento não encontrado" });
+      return res.status(404)
+        .json({ erro: "Instrumento não encontrado" });
     return res.json(instrumento);
   } catch (erro) {
     return next(erro);
@@ -38,7 +39,8 @@ async function atualizar(req, res, next) {
       req.body,
     );
     if (!instrumento)
-      return res.status(404).json({ erro: "Instrumento não encontrado" });
+      return res.status(404)
+        .json({ erro: "Instrumento não encontrado" });
     return res.json({
       mensagem: "Instrumento atualizado com sucesso",
       dados: instrumento,
@@ -51,8 +53,10 @@ async function remover(req, res, next) {
   try {
     const removido = await instrumentoRepository.remover(req.params.id);
     if (!removido)
-      return res.status(404).json({ erro: "Instrumento não encontrado" });
-    return res.status(204).send();
+      return res.status(404)
+        .json({ erro: "Instrumento não encontrado" });
+    return res.status(204)
+      .send();
   } catch (erro) {
     return next(erro);
   }

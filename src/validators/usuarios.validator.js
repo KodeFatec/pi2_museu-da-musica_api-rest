@@ -62,18 +62,21 @@ const validarCadastro = [
 ];
 
 const validarLogin = [
-  body().custom((_, { req }) => {
-    const identificador = req.body.login || req.body.email;
-    if (
-      !identificador ||
-      typeof identificador !== "string" ||
-      !identificador.trim()
-    ) {
-      throw new Error("Informe o e-mail ou CPF");
-    }
-    return true;
-  }),
-  body("senha").notEmpty().withMessage("Senha obrigatória"),
+  body()
+    .custom((_, { req }) => {
+      const identificador = req.body.login || req.body.email;
+      if (
+        !identificador ||
+        typeof identificador !== "string" ||
+        !identificador.trim()
+      ) {
+        throw new Error("Informe o e-mail ou CPF");
+      }
+      return true;
+    }),
+  body("senha")
+    .notEmpty()
+    .withMessage("Senha obrigatória"),
 ];
 
 module.exports = { validarUsuario, validarCadastro, validarLogin };

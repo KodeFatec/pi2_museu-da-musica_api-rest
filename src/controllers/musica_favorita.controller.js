@@ -19,9 +19,10 @@ async function buscarPorId(req, res, next) {
     const musicasFavoritas =
       await musicaFavoritaRepository.buscarPorUsuario(idUsuario);
     if (musicasFavoritas.length === 0) {
-      return res.status(404).json({
-        erro: "Música favorita não encontrada para este usuário",
-      });
+      return res.status(404)
+        .json({
+          erro: "Música favorita não encontrada para este usuário",
+        });
     }
     return res.json({
       total: musicasFavoritas.length,
@@ -38,10 +39,11 @@ async function criar(req, res, next) {
       id_usuario: req.usuario.id_usuario,
       id_musica: req.body.id_musica,
     });
-    return res.status(201).json({
-      mensagem: "Música adicionada aos favoritos com sucesso",
-      dados: musicaFavorita,
-    });
+    return res.status(201)
+      .json({
+        mensagem: "Música adicionada aos favoritos com sucesso",
+        dados: musicaFavorita,
+      });
   } catch (erro) {
     return next(erro);
   }
@@ -55,11 +57,13 @@ async function remover(req, res, next) {
       idMusica,
     );
     if (!removida) {
-      return res.status(404).json({
-        erro: "Música favorita não encontrada para este usuário",
-      });
+      return res.status(404)
+        .json({
+          erro: "Música favorita não encontrada para este usuário",
+        });
     }
-    return res.status(204).send();
+    return res.status(204)
+      .send();
   } catch (erro) {
     return next(erro);
   }
