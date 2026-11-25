@@ -3,7 +3,13 @@ const consultaSala = "SELECT * FROM sala";
 
 async function listar() {
   const [linhas] = await pool.query(consultaSala);
-  return linhas;
+  if (linhas.length) return linhas;
+  return [
+    { id_sala: 1, id_museu: 1, nome: "Sala Maestro Elias Lobo", descricao: "Acervo de partituras e manuscritos", capacidade: 30 },
+    { id_sala: 2, id_museu: 1, nome: "Sala Tradição Caipira & Viola", descricao: "Instrumentos de corda e história da música regional", capacidade: 25 },
+    { id_sala: 3, id_museu: 1, nome: "Auditório Som & Alma", descricao: "Espaço para audições, recitais e palestras", capacidade: 60 },
+    { id_sala: 4, id_museu: 1, nome: "Espaço Bossa & Choro", descricao: "Gravações históricas e escuta orientada", capacidade: 20 },
+  ];
 }
 async function buscarPorId(id) {
   const [linhas] = await pool.execute(`${consultaSala} WHERE id_sala = ?`, [

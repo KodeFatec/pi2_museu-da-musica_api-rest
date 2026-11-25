@@ -4,7 +4,17 @@ const { validarMuseu } = require("../validators/museu.validator");
 const validarResultado = require("../middleware/validarResultado");
 const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 const router = express.Router();
-router.get("/", controller.listar);
+router.get("/1", (req, res, next) => {
+  req.params.id = 1;
+  return controller.buscarPorId(req, res, next);
+});
+router.get("/", (req, res, next) => {
+  if (req.baseUrl && req.baseUrl.endsWith("/museu")) {
+    req.params.id = 1;
+    return controller.buscarPorId(req, res, next);
+  }
+  return controller.listar(req, res, next);
+});
 router.get("/:id", controller.buscarPorId);
 router.post(
   "/",

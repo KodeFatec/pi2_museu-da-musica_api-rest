@@ -1,7 +1,16 @@
 const { pool } = require("../config/database");
 
 async function listar() {
-  const [linhas] = await pool.query("SELECT * FROM colecao");
+  const [linhas] = await pool.query(`
+    SELECT c.*, 
+           COUNT(DISTINCT p.id_musica) AS total_musicas,
+           COUNT(DISTINCT ci.id_item) AS total_itens
+    FROM colecao c
+    LEFT JOIN colecao_item ci ON c.id_colecao = ci.id_colecao
+    LEFT JOIN partitura p ON ci.id_item = p.id_item
+    GROUP BY c.id_colecao
+    ORDER BY c.id_colecao ASC
+  `);
   return linhas;
 }
 async function buscarPorId(id) {
@@ -57,6 +66,22 @@ async function removerItem(idColecao, idItem) {
   );
   return resultado.affectedRows > 0;
 }
+async function listarMusicas(idColecao) {
+  const [linhas] = await pool.execute(`
+    SELECT DISTINCT m.*, g.nome AS genero
+    FROM musica m
+    LEFT JOIN genero_musical g ON g.id_genero = m.id_genero
+    WHERE m.id_musica IN (
+      SELECT p.id_musica
+      FROM colecao_item ci
+      JOIN partitura p ON p.id_item = ci.id_item
+      WHERE ci.id_colecao = ?
+    )
+    ORDER BY m.titulo ASC
+  `, [idColecao]);
+  return linhas;
+}
+
 module.exports = {
   listar,
   buscarPorId,
@@ -64,6 +89,7 @@ module.exports = {
   atualizar,
   remover,
   listarItens,
+  listarMusicas,
   adicionarItem,
   removerItem,
 };

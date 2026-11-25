@@ -50,6 +50,7 @@ app.use("/api/itens-acervo", require("./routes/item_acervo.routes"));
 app.use("/api/categorias", require("./routes/categoria.routes"));
 app.use("/api/midias", require("./routes/midia.routes"));
 app.use("/api/colecoes", require("./routes/colecao.routes"));
+app.use("/api/colecao", require("./routes/colecao.routes"));
 app.use("/api/itens-acervo", require("./routes/item_localizacao.routes"));
 app.use("/api/museus", require("./routes/museu.routes"));
 app.use("/api/museu", require("./routes/museu.routes"));

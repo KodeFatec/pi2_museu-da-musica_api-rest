@@ -56,6 +56,14 @@ async function listarItens(req, res, next) {
     return next(e);
   }
 }
+async function listarMusicas(req, res, next) {
+  try {
+    const dados = await repository.listarMusicas(req.params.id);
+    return res.json({ total: dados.length, dados });
+  } catch (e) {
+    return next(e);
+  }
+}
 async function adicionarItem(req, res, next) {
   try {
     const dados = await repository.adicionarItem(
@@ -85,6 +93,7 @@ module.exports = {
   atualizar,
   remover,
   listarItens,
+  listarMusicas,
   adicionarItem,
   removerItem,
 };

@@ -10,6 +10,7 @@ const router = express.Router();
 router.get("/", controller.listar);
 router.get("/:id", controller.buscarPorId);
 router.get("/:id/itens", controller.listarItens);
+router.get("/:id/musicas", controller.listarMusicas);
 router.post(
   "/",
   autenticarJwt,
