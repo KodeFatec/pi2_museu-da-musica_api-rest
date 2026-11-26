@@ -3,6 +3,27 @@ const express = require("express");
 const path = require("path");
 
 const app = express();
+const frontendOrigin =
+  process.env.FRONTEND_ORIGIN || "https://museu-musica-itu.onrender.com";
+
+app.use((req, res, next) => {
+  if (req.get("Origin") === frontendOrigin) {
+    res.set("Access-Control-Allow-Origin", frontendOrigin);
+    res.set("Vary", "Origin");
+    res.set(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    );
+    res.set(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, OPTIONS, PATCH",
+    );
+  }
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "..", "public")));
