@@ -24,16 +24,6 @@ async function validarMusicaExistente(idMusica) {
 }
 
 const validarHistoricoMusica = [
-  body("id_usuario")
-    .exists({ checkFalsy: true })
-    .withMessage("O id do usuário é obrigatório")
-    .bail()
-    .isInt({ min: 1 })
-    .withMessage("O id do usuário deve ser um número inteiro positivo")
-    .toInt()
-    .bail()
-    .custom(validarUsuarioExistente),
-
   body("id_musica")
     .exists({ checkFalsy: true })
     .withMessage("O id da música é obrigatório")
@@ -46,7 +36,7 @@ const validarHistoricoMusica = [
 
   body("progresso")
     .optional()
-    .matches(/^\d{2}:[0-5]\d:[0-5]\d  $/)
+    .matches(/^\d{2}:[0-5]\d:[0-5]\d$/)
     .withMessage("O progresso deve estar no formato HH:MM:SS"),
 ];
 

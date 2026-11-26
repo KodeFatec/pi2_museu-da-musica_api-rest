@@ -1,0 +1,23 @@
+const express = require("express");
+const controller = require("../controllers/item_localizacao.controller");
+const validarResultado = require("../middleware/validarResultado");
+const {
+  validarLocalizacao,
+} = require("../validators/item_localizacao.validator");
+const { autenticarJwt } = require("../middleware/autenticacaoJwt");
+
+const router = express.Router();
+
+router.get("/:id/localizacoes", controller.listar);
+
+router.use(autenticarJwt);
+
+router.post(
+  "/:id/localizacoes",
+  validarLocalizacao,
+  validarResultado,
+  controller.registrar,
+);
+router.delete("/:id/localizacoes/atual", controller.encerrar);
+
+module.exports = router;

@@ -40,7 +40,8 @@ async function validarYoutubeVideoIdUnico(youtubeVideoId, { req }) {
   }
 }
 
-const anoAtual = new Date().getFullYear();
+const anoAtual = new Date()
+  .getFullYear();
 
 const validarMusica = [
   body("id_genero")

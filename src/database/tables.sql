@@ -1,107 +1,180 @@
-CREATE table
-    genero_musical (
-        id_genero int primary key auto_increment,
-        nome varchar(80) unique not null,
-        descricao text null
-    );
+USE museu_musica;
 
-CREATE table
-    musica (
-        id_musica int primary key auto_increment,
-        id_genero int null,
-        titulo varchar(150) NOT NULL,
-        isrc char(12) unique null,
-        duracao time NOT NULL, -- está no banco de dados como opcional, mas precisa ter uma duração para poder tocar a música
-        ano_gravacao smallint null,
-        descricao TEXT null,
-        arquivo_audio varchar(500) NULL,
-        spotify_uri varchar(255) unique NULL,
-        youtube_video_id varchar(100) unique null,
-        foreign key (id_genero) references genero_musical (id_genero)
-    );
-
-CREATE table
-    categoria (
-        id_categoria int primary key auto_increment,
-        nome varchar(100) unique not null,
-        descricao text null
-    );
-
-CREATE table
-    item_acervo (
-        id_item int primary key auto_increment,
-        id_categoria int not null,
-        titulo varchar(200) not null,
-        descricao text null,
-        origem varchar(200) null,
-        data_aquisicao date null,
-        estado_conservacao varchar(50) null,
-        data_cadastro timestamp default current_timestamp,
-        id_usuario_cadastro int not null,
-        foreign key (id_categoria) references categoria (id_categoria),
-        foreign key (id_usuario_cadastro) references usuario (id_usuario)
-    );
-
-CREATE table
-    partitura (
-        id_item int primary key,
-        id_musica int null,
-        autor varchar(150) null,
-        ano_criacao smallint null,
-        arquivo_url varchar(500) null,
-        foreign key (id_item) references item_acervo (id_item),
-        foreign key (id_musica) references musica (id_musica)
-    );
-
-CREATE TABLE 
-    musica_favorita (
-        id_usuario INT NOT NULL,
-        id_musica int not null,
-        data_favoritada DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (id_usuario, id_musica),
-        FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario),
-        FOREIGN KEY (id_musica) REFERENCES musica(id_musica)
+CREATE TABLE IF NOT EXISTS museu (
+    id_museu INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(150) NOT NULL,
+    descricao TEXT NULL,
+    endereco VARCHAR(255) NULL,
+    telefone VARCHAR(20) NULL,
+    email VARCHAR(150) UNIQUE NULL
 );
 
-CREATE TABLE
-    artista (
-        id_artista int primary key auto_increment,
-        nome_artistico varchar(150) null,
-        nome_completo varchar(200) null,
-        biografia text null,
-        data_nascimento date null,
-        data_falecimento date null,
-        foto_url varchar(500) null
-    );
+CREATE TABLE IF NOT EXISTS sala(
+    id_sala INT PRIMARY KEY AUTO_INCREMENT,
+    id_museu INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT NULL,
+    capacidade INT NULL,
+    CONSTRAINT chk_sala_capacidade CHECK (
+        capacidade IS NULL
+        OR capacidade >= 0
+    ),
+    CONSTRAINT fk_sala_museu FOREIGN KEY (id_museu) REFERENCES museu (id_museu) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
-CREATE TABLE
-    musica_artista (
-        id_musica int not null,
-        id_artista int not null,
-        tipo_participacao varchar(150) null,
-        PRIMARY KEY (id_musica, id_artista),
-        FOREIGN KEY (id_musica) REFERENCES musica (id_musica),
-        FOREIGN KEY (id_artista) REFERENCES artista (id_artista)
-    );
+CREATE TABLE IF NOT EXISTS usuario (
+    id_usuario CHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    nome VARCHAR(150) NOT NULL,
+    cpf CHAR(11) NULL,
+    email VARCHAR(150) NOT NULL,
+    senha_hash VARCHAR(255) NULL,
+    telefone VARCHAR(20) NULL,
+    data_cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    constraint uk_usuarios_email unique (email),
+    constraint uk_usuarios_cpf unique (cpf)
+);
 
-CREATE TABLE
-    letra_trecho (
-        id_trecho int primary key auto_increment,
-        id_musica int not null,
-        tempo_inicio time not null,
-        tempo_fim time not null,
-        ordem int not null,
-        texto text not null
-        foreign key (id_musica) references musica (id_musica),
-    );
+CREATE TABLE IF NOT EXISTS categoria (
+    id_categoria INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) UNIQUE NOT NULL,
+    descricao TEXT NULL
+);
 
-CREATE TABLE
-    historico_musicas (
-        id_historico bigint primary key auto_increment,
-        id_usuario int not null,
-        id_musica int not null,
-        data_reproducao datetime not null default current_timestamp,
-        progresso time null,
-        foreign key (id_usuario) references usuario (id_usuario),
-        foreign key (id_musica) references musica (id_musica)
-    );
+CREATE TABLE IF NOT EXISTS colecao (
+    id_colecao INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(150) NOT NULL,
+    descricao TEXT NULL
+);
+
+CREATE TABLE IF NOT EXISTS item_acervo (
+    id_item INT PRIMARY KEY AUTO_INCREMENT,
+    id_categoria INT NOT NULL,
+    titulo VARCHAR(200) NOT NULL,
+    descricao TEXT NULL,
+    origem VARCHAR(200) NULL,
+    data_aquisicao DATE NULL,
+    estado_conservacao VARCHAR(50) NULL,
+    data_cadastro DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_usuario_cadastro CHAR(36) NULL,
+    CONSTRAINT fk_item_categoria FOREIGN KEY (id_categoria) REFERENCES categoria (id_categoria) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_item_usuario_cadastro FOREIGN KEY (id_usuario_cadastro) REFERENCES usuario (id_usuario) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS colecao_item (
+    id_colecao INT NOT NULL,
+    id_item INT NOT NULL,
+    PRIMARY KEY (id_colecao, id_item),
+    CONSTRAINT fk_colecao_item_colecao FOREIGN KEY (id_colecao) REFERENCES colecao (id_colecao) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_colecao_item_item FOREIGN KEY (id_item) REFERENCES item_acervo (id_item) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS midia (
+    id_midia INT PRIMARY KEY AUTO_INCREMENT,
+    id_item INT NOT NULL,
+    tipo_midia VARCHAR(30) NOT NULL,
+    arquivo_url VARCHAR(500) NOT NULL,
+    descricao VARCHAR(255) NULL,
+    CONSTRAINT fk_midia_item FOREIGN KEY (id_item) REFERENCES item_acervo (id_item) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS instrumento (
+    id_item INT PRIMARY KEY,
+    tipo_instrumento VARCHAR(100) NULL,
+    fabricante VARCHAR(150) NULL,
+    ano_fabricacao SMALLINT NULL,
+    antigo_dono VARCHAR(150) NULL,
+    CONSTRAINT fk_instrumento_item FOREIGN KEY (id_item) REFERENCES item_acervo (id_item) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS item_localizacao (
+    id_localizacao INT PRIMARY KEY AUTO_INCREMENT,
+    id_item INT NOT NULL,
+    id_sala INT NOT NULL,
+    data_inicio DATETIME NOT NULL,
+    data_fim DATETIME NULL,
+    CONSTRAINT chk_localizacao_datas CHECK (
+        data_fim IS NULL
+        OR data_fim >= data_inicio
+    ),
+    CONSTRAINT fk_localizacao_item FOREIGN KEY (id_item) REFERENCES item_acervo (id_item) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_localizacao_sala FOREIGN KEY (id_sala) REFERENCES sala (id_sala) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS genero_musical (
+    id_genero INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(80) UNIQUE NOT NULL,
+    descricao TEXT NULL
+);
+
+CREATE TABLE IF NOT EXISTS musica (
+    id_musica INT PRIMARY KEY AUTO_INCREMENT,
+    id_genero INT NULL,
+    titulo VARCHAR(150) NOT NULL,
+    isrc CHAR(12) UNIQUE NULL,
+    duracao TIME NOT NULL,
+    ano_gravacao SMALLINT NULL,
+    descricao TEXT NULL,
+    arquivo_audio VARCHAR(500) NULL,
+    spotify_uri VARCHAR(255) UNIQUE NULL,
+    youtube_video_id VARCHAR(100) UNIQUE NULL,
+    CONSTRAINT fk_musica_genero FOREIGN KEY (id_genero) REFERENCES genero_musical (id_genero) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS partitura (
+    id_item INT PRIMARY KEY,
+    id_musica INT NULL,
+    autor VARCHAR(150) NULL,
+    ano_criacao SMALLINT NULL,
+    arquivo_url VARCHAR(500) NULL,
+    CONSTRAINT fk_partitura_item FOREIGN KEY (id_item) REFERENCES item_acervo (id_item) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_partitura_musica FOREIGN KEY (id_musica) REFERENCES musica (id_musica) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS artista (
+    id_artista INT PRIMARY KEY AUTO_INCREMENT,
+    nome_artistico VARCHAR(150) NULL,
+    nome_completo VARCHAR(200) NULL,
+    biografia TEXT NULL,
+    data_nascimento DATE NULL,
+    data_falecimento DATE NULL,
+    foto_url VARCHAR(500) NULL
+);
+
+CREATE TABLE IF NOT EXISTS musica_artista (
+    id_musica INT NOT NULL,
+    id_artista INT NOT NULL,
+    tipo_participacao VARCHAR(50) NULL,
+    PRIMARY KEY (id_musica, id_artista),
+    CONSTRAINT fk_musica_artista_musica FOREIGN KEY (id_musica) REFERENCES musica (id_musica) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_musica_artista_artista FOREIGN KEY (id_artista) REFERENCES artista (id_artista) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS letra_trecho (
+    id_trecho INT PRIMARY KEY AUTO_INCREMENT,
+    id_musica INT NOT NULL,
+    tempo_inicio TIME NOT NULL,
+    tempo_fim TIME NOT NULL,
+    ordem INT NOT NULL,
+    texto TEXT NOT NULL,
+    CONSTRAINT chk_letra_tempos CHECK (tempo_fim >= tempo_inicio),
+    CONSTRAINT fk_letra_musica FOREIGN KEY (id_musica) REFERENCES musica (id_musica) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS musica_favorita (
+    id_usuario CHAR(36) NOT NULL,
+    id_musica INT NOT NULL,
+    data_favoritada DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id_usuario, id_musica),
+    CONSTRAINT fk_favorita_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_favorita_musica FOREIGN KEY (id_musica) REFERENCES musica (id_musica) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS historico_musica (
+    id_historico BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario CHAR(36) NOT NULL,
+    id_musica INT NOT NULL,
+    data_reproducao DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    progresso TIME NULL,
+    CONSTRAINT fk_historico_usuario FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_historico_musica FOREIGN KEY (id_musica) REFERENCES musica (id_musica) ON DELETE CASCADE ON UPDATE CASCADE
+);

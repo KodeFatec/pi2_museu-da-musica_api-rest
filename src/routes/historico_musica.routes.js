@@ -4,8 +4,11 @@ const {
   validarHistoricoMusica,
 } = require("../validators/historico_musica.validator");
 const validarResultado = require("../middleware/validarResultado");
+const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 
 const router = express.Router();
+
+router.use(autenticarJwt);
 
 router.get("/", historicoMusicaController.listar);
 router.get("/:id", historicoMusicaController.buscarPorId);

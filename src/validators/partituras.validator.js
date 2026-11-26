@@ -1,7 +1,8 @@
 const { body } = require("express-validator");
 const { pool } = require("../config/database");
 
-const anoAtual = new Date().getFullYear();
+const anoAtual = new Date()
+  .getFullYear();
 
 async function validarCategoriaExistente(idCategoria) {
   const [categorias] = await pool.execute(
@@ -107,7 +108,9 @@ const validarPartitura = [
   body("ano_criacao")
     .optional()
     .isInt({ min: 0, max: anoAtual })
-    .withMessage("O ano de gravação deve ser um número inteiro entre 0 e o ano atual")
+    .withMessage(
+      "O ano de gravação deve ser um número inteiro entre 0 e o ano atual",
+    )
     .toInt(),
 
   body("arquivo_url")
