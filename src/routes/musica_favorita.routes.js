@@ -8,10 +8,11 @@ const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 
 const router = express.Router();
 
-router.get("/", autenticarJwt, musicaFavoritaController.listar);
+router.use(autenticarJwt);
+
+router.get("/", musicaFavoritaController.listar);
 router.post(
   "/",
-  autenticarJwt,
   validarMusicaFavorita,
   validarResultado,
   musicaFavoritaController.criar,
@@ -23,6 +24,6 @@ router.post(
   validarResultado,
   musicaFavoritaController.atualizar,
 );*/
-router.delete("/:id_musica", autenticarJwt, musicaFavoritaController.remover);
+router.delete("/:id_musica", musicaFavoritaController.remover);
 
 module.exports = router;

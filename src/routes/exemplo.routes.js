@@ -2,11 +2,15 @@ const express = require("express");
 const clientesController = require("../controllers/exemplo.controller");
 const { validarCliente } = require("../validators/exemplo.validator");
 const validarResultado = require("../middleware/validarResultado");
+const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 
 const router = express.Router();
 
 router.get("/", clientesController.listar);
 router.get("/:id", clientesController.buscarPorId);
+
+router.use(autenticarJwt);
+
 router.post("/", validarCliente, validarResultado, clientesController.criar);
 router.put(
   "/:id",

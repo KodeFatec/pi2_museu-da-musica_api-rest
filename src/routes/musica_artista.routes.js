@@ -5,15 +5,16 @@ const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 const router = express.Router();
 
 router.get("/", musicaArtistaController.listar);
-router.post("/", autenticarJwt, musicaArtistaController.criar);
+
+router.use(autenticarJwt);
+
+router.post("/", musicaArtistaController.criar);
 router.put(
   "/:id_musica/:id_artista",
-  autenticarJwt,
   musicaArtistaController.atualizar,
 );
 router.delete(
   "/:id_musica/:id_artista",
-  autenticarJwt,
   musicaArtistaController.remover,
 );
 

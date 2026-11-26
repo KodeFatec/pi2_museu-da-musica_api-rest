@@ -8,20 +8,21 @@ const router = express.Router();
 
 router.get("/", controller.listar);
 router.get("/:id", controller.buscarPorId);
+
+router.use(autenticarJwt);
+
 router.post(
   "/",
-  autenticarJwt,
   validarMidia,
   validarResultado,
   controller.criar,
 );
 router.put(
   "/:id",
-  autenticarJwt,
   validarMidia,
   validarResultado,
   controller.atualizar,
 );
-router.delete("/:id", autenticarJwt, controller.remover);
+router.delete("/:id", controller.remover);
 
 module.exports = router;

@@ -9,13 +9,15 @@ const { autenticarJwt } = require("../middleware/autenticacaoJwt");
 const router = express.Router();
 
 router.get("/:id/localizacoes", controller.listar);
+
+router.use(autenticarJwt);
+
 router.post(
   "/:id/localizacoes",
-  autenticarJwt,
   validarLocalizacao,
   validarResultado,
   controller.registrar,
 );
-router.delete("/:id/localizacoes/atual", autenticarJwt, controller.encerrar);
+router.delete("/:id/localizacoes/atual", controller.encerrar);
 
 module.exports = router;

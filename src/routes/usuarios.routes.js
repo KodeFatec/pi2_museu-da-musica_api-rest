@@ -12,18 +12,20 @@ const router = express.Router();
 router.post("/login", validarLogin, validarResultado, controller.login);
 router.post("/cadastro", validarCadastro, validarResultado, controller.criar);
 router.post("/register", validarCadastro, validarResultado, controller.criar);
-router.get("/me", autenticarJwt, controller.perfil);
-router.get("/perfis", autenticarJwt, controller.listarPerfis);
-router.get("/:id/perfis", autenticarJwt, controller.listarPerfis);
-router.get("/", autenticarJwt, controller.listar);
-router.get("/:id", autenticarJwt, controller.buscarPorId);
+
+router.use(autenticarJwt);
+
+router.get("/me", controller.perfil);
+router.get("/perfis", controller.listarPerfis);
+router.get("/:id/perfis", controller.listarPerfis);
+router.get("/", controller.listar);
+router.get("/:id", controller.buscarPorId);
 router.put(
   "/:id",
-  autenticarJwt,
   validarUsuario,
   validarResultado,
   controller.atualizar,
 );
-router.delete("/:id", autenticarJwt, controller.remover);
+router.delete("/:id", controller.remover);
 
 module.exports = router;

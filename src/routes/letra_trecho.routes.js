@@ -16,16 +16,17 @@ router.get(
   validarResultado,
   letraTrechoController.buscarPorId,
 );
+
+router.use(autenticarJwt);
+
 router.post(
   "/",
-  autenticarJwt,
   validarLetraTrecho,
   validarResultado,
   letraTrechoController.criar,
 );
 router.put(
   "/:id",
-  autenticarJwt,
   validarIdTrecho,
   validarLetraTrecho,
   validarResultado,
@@ -33,7 +34,6 @@ router.put(
 );
 router.delete(
   "/:id",
-  autenticarJwt,
   validarIdTrecho,
   validarResultado,
   letraTrechoController.remover,
